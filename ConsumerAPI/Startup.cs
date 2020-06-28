@@ -59,7 +59,7 @@ namespace ConsumerAPI
                 options.DescribeAllParametersInCamelCase();
                 options.SwaggerDoc("v0", new OpenApiInfo
                 {
-                    Title = "Softplan challenge - ConsumerAPI",
+                    Title = "Softplan challenge - ConsumerAPI (API 2)",
                     Version = "v0",
                     Description = "WebApi created for the Softplan challenge",
                     TermsOfService = new Uri("http://linkedin.com"),
