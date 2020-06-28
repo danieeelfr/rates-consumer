@@ -50,12 +50,12 @@ namespace Services.Tests
             Assert.NotNull(result.AccessToken);
         }
 
-        private static UserLoginFilter buildFilter(string email, string password)
+        private static UserLoginFilter buildFilter(string email, string pass)
         {
             return new UserLoginFilter()
             {
                 Email = email,
-                Password = password
+                Password = pass
             };
         }
     }
