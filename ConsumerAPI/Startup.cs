@@ -67,7 +67,7 @@ namespace ConsumerAPI
                     {
                         Name = "Daniel Fonseca Reis",
                         Email = "danielfonsecareis@gmail.com",
-                        Url = new Uri("http://linkedin.com"),
+                        Url = new Uri("http://din.com"),
                     }
                 });
 
