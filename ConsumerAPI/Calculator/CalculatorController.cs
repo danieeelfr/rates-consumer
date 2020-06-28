@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConsumerAPI.Calculator.Controllers
+namespace ConsumerAPI.Calculator
 {
     [Route("api/v0/[controller]")]
     [ApiController]
