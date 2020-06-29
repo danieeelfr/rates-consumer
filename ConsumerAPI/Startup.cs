@@ -1,4 +1,3 @@
-using System;
 using Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,10 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services;
 using Microsoft.OpenApi.Models;
-using AutoMapper;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ConsumerAPI
 {
@@ -23,67 +18,36 @@ namespace ConsumerAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<IOperationService, OperationService>();
 
             services.AddCors();
             services.AddControllers();
-
-            var key = Configuration.GetValue<string>("JwtToken:SecretKey");
-            var secret = Encoding.ASCII.GetBytes(key);
-
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(secret),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-
-            services.AddAutoMapper(typeof(Startup));
 
             services.AddSwaggerGen(options =>
             {
                 options.DescribeAllParametersInCamelCase();
                 options.SwaggerDoc("v0", new OpenApiInfo
                 {
-                    Title = "Softplan challenge - ConsumerAPI (API 2)",
+                    Title = "ConsumerAPI (API 2)",
                     Version = "v0",
-                    Description = "WebApi created for the Softplan challenge",
-                    TermsOfService = new Uri("http://linkedin.com"),
+                    Description = "Softplan challenge",
                     Contact = new OpenApiContact
                     {
-                        Name = "Daniel Fonseca Reis",
-                        Email = "danielfonsecareis@gmail.com",
-                        Url = new Uri("http://din.com"),
+                        Name = " Daniel Fonseca Reis | (31) 99753-3402",
+                        Email = "danielfonsecareis@gmail.com"
                     }
                 });
-
             });
-
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -92,9 +56,6 @@ namespace ConsumerAPI
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -105,9 +66,8 @@ namespace ConsumerAPI
 
             app.UseSwaggerUI(c =>
             {
-
                 c.RoutePrefix = "";
-                c.SwaggerEndpoint("/swagger/v0/swagger.json", "ConsumerAPI");
+                c.SwaggerEndpoint("/swagger/v0/swagger.json", "API 2 (consumer-api");
             });
         }
     }
