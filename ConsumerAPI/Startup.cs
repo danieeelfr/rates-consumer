@@ -20,6 +20,9 @@ namespace ConsumerAPI
         {
             services.AddCors();
             services.AddControllers();
+            
+           
+
             services.AddHttpClient();
 
             services.AddSwaggerGen(options =>
