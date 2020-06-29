@@ -1,10 +1,8 @@
-using Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Services;
 using Microsoft.OpenApi.Models;
 
 namespace ConsumerAPI
@@ -20,10 +18,9 @@ namespace ConsumerAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IOperationService, OperationService>();
-
             services.AddCors();
             services.AddControllers();
+            services.AddHttpClient();
 
             services.AddSwaggerGen(options =>
             {

@@ -8,16 +8,16 @@ FROM  mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
 COPY ["./", "./"]
 COPY ["ConsumerAPI/ConsumerAPI.csproj", "./ConsumerAPI/"]
-COPY ["Services/Services.csproj", "./Services/"]
-COPY ["Core/Core.csproj", "./Core/"]
-COPY ["Service.Tests/Service.Tests.csproj", "./Service.Tests/"]
+# COPY ["Services/Services.csproj", "./Services/"]
+# COPY ["Core/Core.csproj", "./Core/"]
+# COPY ["Service.Tests/Service.Tests.csproj", "./Service.Tests/"]
 
 RUN dotnet restore "./ConsumerAPI/ConsumerAPI.csproj"
 
 COPY . .
 COPY ["ConsumerAPI/.", "./ConsumerAPI/"]
-COPY ["Services/.", "./Services/"]
-COPY ["Core/.", "./Core/"]
+# COPY ["Services/.", "./Services/"]
+# COPY ["Core/.", "./Core/"]
 WORKDIR "/src/."
 
 RUN dotnet build "./ConsumerAPI/ConsumerAPI.csproj" -c Release -o /app/build
