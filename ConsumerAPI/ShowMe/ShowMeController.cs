@@ -11,19 +11,11 @@ namespace ConsumerAPI.ShowMe
         [ProducesResponseType (StatusCodes.Status200OK)]
         public ActionResult<List<string>> ShowMetTheCode () {
             var urls = new [] {
-                new {
-                    title = "API 1",
-                    api_doc = "https://danielfr-softplan-rates-api.azurewebsites.net/index.html",
-                    repository_url = "https://github.com/danieeelfr/rates-service"     
-                },
-                new {
-                    title = "API 2",
-                    api_doc = "https://danielfr-softplan-consumer-api.azurewebsites.net/index.html",
-                    repository_url = "https://github.com/danieeelfr/rates-consumer"     
-                }
-            };
+                "https://danielfr-softplan-rates-api.azurewebsites.net/index.html",
+                "https://danielfr-softplan-consumer-api.azurewebsites.net/index.html"  
+                };
 
-            return Ok (urls);
+            return new JsonResult(new {urls = urls});
 
         }
     }

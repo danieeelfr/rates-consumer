@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ConsumerAPI.DTOs;
 
 namespace ConsumerAPI.Calculator
 {
@@ -26,8 +27,9 @@ namespace ConsumerAPI.Calculator
         public async Task<ActionResult<double>> CalculaJurosAsync([FromQuery] decimal valorInicial, [FromQuery] int meses)
         {
             var taxaJuros = await GetAsync("taxajuros");
-            var valorFinal = (double)valorInicial * (Math.Pow(1 + (double)taxaJuros, (double)meses));
-            return Ok(valorFinal.ToString("C2"));
+            double valorFinal = (double)valorInicial * (Math.Pow(1 + (double)taxaJuros, (double)meses));
+            var result = (TruncateValue(Decimal.Parse(valorFinal.ToString()))).ToString("0.00");
+            return new JsonResult(result);
         }
 
         private async Task<decimal> GetAsync(string action)
@@ -63,7 +65,7 @@ namespace ConsumerAPI.Calculator
 
         }
 
-        private async ValueTask<AuthOutput> GetAccessTokenAsync()
+        private async ValueTask<AuthOutputDTO> GetAccessTokenAsync()
         {
             var loginInput = new { email = RATES_API_LOGIN, password = RATES_API_PASSWORD };
             
@@ -77,7 +79,7 @@ namespace ConsumerAPI.Calculator
             if (response.IsSuccessStatusCode)
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
-                var result = await JsonSerializer.DeserializeAsync<AuthOutput>(responseStream);
+                var result = await JsonSerializer.DeserializeAsync<AuthOutputDTO>(responseStream);
 
                 return result;
             }
@@ -86,10 +88,12 @@ namespace ConsumerAPI.Calculator
                 throw new Exception();
             }
         }
-        public class AuthOutput
+
+        private decimal TruncateValue(decimal value) 
         {
-            public string accessToken { get; set; }
+            return Math.Truncate(value * 100) / 100;
         }
+        
     }
 
 }

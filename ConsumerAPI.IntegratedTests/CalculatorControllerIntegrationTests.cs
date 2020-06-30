@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using ConsumerAPI;
+using ConsumerAPI.DTOs;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using System.Text.Json;
 
 public class CalculatorControllerIntegrationTests {
 
@@ -34,10 +36,11 @@ public class CalculatorControllerIntegrationTests {
         // Assert
         response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        string responseBody = await response.Content.ReadAsStringAsync();
        
-       Debug.WriteLine(responseBody);
+        using var responseStream = await response.Content.ReadAsStreamAsync();
+        string result = await JsonSerializer.DeserializeAsync<string>(responseStream);
         
+        Assert.Equal("105.10", result.ToString());
     }
 
 }
