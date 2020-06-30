@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using Moq;
+
 
 public class CalculatorControllerIntegrationTests {
 
     private readonly HttpClient _client;
-
     public CalculatorControllerIntegrationTests()
     {
         var server = new TestServer(new WebHostBuilder()
@@ -21,11 +23,17 @@ public class CalculatorControllerIntegrationTests {
         .UseStartup<Startup>());
 
         _client = server.CreateClient();
+        
     }
 
     [Theory]
-    [InlineData(100.0, 5)]
-    public async Task CalculatorShouldReturnSuccess(decimal valorInicial, int meses) {
+    [InlineData(0, 1, 0)]
+    [InlineData(1, 0, 1)]
+    [InlineData(100, 5, 105.10)]
+    [InlineData(1000.34829, 10, 1105.00)]
+    [InlineData(1500.84829, 12, 1691.19)]
+    [InlineData(50000.508291015, 24, 63487.37)]
+    public async Task CalculatorShouldReturnSuccess(decimal valorInicial, int meses, float expected) {
 
         // Arrange
         var request = new HttpRequestMessage(new HttpMethod("GET"), $"/api/v0/calculajuros?valorInicial={valorInicial}&meses={meses}");
@@ -38,9 +46,9 @@ public class CalculatorControllerIntegrationTests {
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
        
         using var responseStream = await response.Content.ReadAsStreamAsync();
-        string result = await JsonSerializer.DeserializeAsync<string>(responseStream);
+        var result = await JsonSerializer.DeserializeAsync<float>(responseStream);
         
-        Assert.Equal("105.10", result.ToString());
+        Assert.Equal(expected, result);
     }
 
 }

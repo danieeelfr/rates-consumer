@@ -11,6 +11,7 @@ using System;
 using Newtonsoft.Json;
 using ConsumerAPI.DTOs;
 
+
 public class ShowMeControllerIntegrationTests {
 
     private readonly HttpClient _client;
@@ -40,8 +41,8 @@ public class ShowMeControllerIntegrationTests {
 
         var obj = JsonConvert.DeserializeObject<ShowMeOutputDTO>(responseBody);
        
-        Assert.Equal("https://danielfr-softplan-rates-api.azurewebsites.net/index.html", obj.urls[0]);
-        Assert.Equal("https://danielfr-softplan-consumer-api.azurewebsites.net/index.html", obj.urls[1]);
+        Assert.Equal("https://github.com/danieeelfr/rates-service", obj.urls[0]);
+        Assert.Equal("https://github.com/danieeelfr/rates-consumer", obj.urls[1]);
         
     }
 }

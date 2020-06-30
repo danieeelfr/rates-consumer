@@ -4,18 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConsumerAPI.ShowMe
 {
-    [Route ("api/v0")]
+    [Route("api/v0")]
     [ApiController]
-    public class ShowMeController : ControllerBase {
-        [HttpGet ("showmethecode")]
-        [ProducesResponseType (StatusCodes.Status200OK)]
-        public ActionResult<List<string>> ShowMetTheCode () {
-            var urls = new [] {
-                "https://danielfr-softplan-rates-api.azurewebsites.net/index.html",
-                "https://danielfr-softplan-consumer-api.azurewebsites.net/index.html"  
+    public class ShowMeController : ControllerBase
+    {
+        [HttpGet("showmethecode")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<List<string>> ShowMetTheCode()
+        {
+            var urls = new[] {
+                "https://github.com/danieeelfr/rates-service",
+                "https://github.com/danieeelfr/rates-consumer"
                 };
 
-            return new JsonResult(new {urls = urls});
+            return new JsonResult(new { urls = urls });
 
         }
     }
