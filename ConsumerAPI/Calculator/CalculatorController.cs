@@ -6,19 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using System.Net.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Threading.Tasks;
-using ConsumerAPI.HttpClient;
-using System.Net;
-using System.Text.Json;
-
 namespace ConsumerAPI.Calculator
 {
-
     [Route("api/v0/")]
     [ApiController]
     public class CalculatorController : ControllerBase
@@ -36,18 +25,9 @@ namespace ConsumerAPI.Calculator
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<double>> CalculaJurosAsync([FromQuery] decimal valorInicial, [FromQuery] int meses)
         {
-            try
-            {
-                var taxaJuros = await GetAsync("taxajuros");
-
-                var valorFinal = (double)valorInicial * (Math.Pow(1+(double)taxaJuros,(double)meses));
-
-                return Ok(valorFinal.ToString("C2"));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            var taxaJuros = await GetAsync("taxajuros");
+            var valorFinal = (double)valorInicial * (Math.Pow(1 + (double)taxaJuros, (double)meses));
+            return Ok(valorFinal.ToString("C2"));
         }
 
         private async Task<decimal> GetAsync(string action)
@@ -85,10 +65,8 @@ namespace ConsumerAPI.Calculator
 
         private async ValueTask<AuthOutput> GetAccessTokenAsync()
         {
-
             var loginInput = new { email = RATES_API_LOGIN, password = RATES_API_PASSWORD };
             
-
             var request = new HttpRequestMessage(HttpMethod.Post, $"{RATES_API_BASE_URL}auth");
             request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(loginInput),
                                                 System.Text.Encoding.UTF8, "application/json");
@@ -108,9 +86,10 @@ namespace ConsumerAPI.Calculator
                 throw new Exception();
             }
         }
-        public class AuthOutput {
+        public class AuthOutput
+        {
             public string accessToken { get; set; }
         }
-}
-
     }
+
+}
