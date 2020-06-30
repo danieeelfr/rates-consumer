@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace ConsumerAPI
 {
@@ -20,9 +21,8 @@ namespace ConsumerAPI
         {
             services.AddCors();
             services.AddControllers();
+            services.AddOptions();
             
-           
-
             services.AddHttpClient();
 
             services.AddSwaggerGen(options =>

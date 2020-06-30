@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using Moq;
+
 
 public class CalculatorControllerIntegrationTests {
 
     private readonly HttpClient _client;
-
     public CalculatorControllerIntegrationTests()
     {
         var server = new TestServer(new WebHostBuilder()
@@ -21,6 +23,7 @@ public class CalculatorControllerIntegrationTests {
         .UseStartup<Startup>());
 
         _client = server.CreateClient();
+        
     }
 
     [Theory]
