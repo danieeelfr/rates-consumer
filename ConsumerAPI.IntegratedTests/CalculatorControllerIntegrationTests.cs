@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-
+using System.IO;
+using System.Diagnostics;
 
 public class CalculatorControllerIntegrationTests {
 
@@ -33,7 +34,9 @@ public class CalculatorControllerIntegrationTests {
         // Assert
         response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        // Assert.Equal(105.10, response.data);
+        string responseBody = await response.Content.ReadAsStringAsync();
+       
+       Debug.WriteLine(responseBody);
         
     }
 
