@@ -19,30 +19,30 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-# - task: DotNetCoreCLI@2
-#   displayName: 'Install tools'
-#   inputs:
-#     command: custom
-#     custom: tool
-#     arguments: 'restore'  
-# - task: DotNetCoreCLI@2
-#   displayName: 'Unit tests'
-#   inputs:
-#     command: 'test'
-#     arguments: '--configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
-#     publishTestResults: true
-#     projects: '**/*.Tests.csproj'
-# - task: DotNetCoreCLI@2
-#   displayName: 'Quality Assurance'
-#   inputs:
-#     command: custom
-#     custom: tool
-#     arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines'
-# - task: PublishCodeCoverageResults@1
-#   displayName: 'Quality report'
-#   inputs:
-#     codeCoverageTool: 'cobertura'
-#     summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+- task: DotNetCoreCLI@2
+  displayName: 'Install tools'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'restore'  
+- task: DotNetCoreCLI@2
+  displayName: 'Integrated tests'
+  inputs:
+    command: 'test'
+    arguments: '--configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+    publishTestResults: true
+    projects: '**/*.IntegratedTests.csproj'
+- task: DotNetCoreCLI@2
+  displayName: 'Quality Assurance'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines'
+- task: PublishCodeCoverageResults@1
+  displayName: 'Quality report'
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
 - task: Docker@2
   displayName: 'Dockering'
   inputs:
