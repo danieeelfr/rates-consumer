@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ConsumerAPI.DTOs;
+using System.Globalization;
 
 namespace ConsumerAPI.Calculator
 {
@@ -16,6 +17,10 @@ namespace ConsumerAPI.Calculator
         private const string RATES_API_BASE_URL = "https://danielfr-softplan-rates-api.azurewebsites.net/api/v0/";
         private const string RATES_API_LOGIN = "valid-user@gmail.com";
         private const string RATES_API_PASSWORD = "12345";
+
+        private const string AUTH_ACTION = "auth";
+
+
         private readonly IHttpClientFactory _httpClient;
         public CalculatorController(IHttpClientFactory _httpClient)
         {
@@ -24,53 +29,52 @@ namespace ConsumerAPI.Calculator
 
         [HttpGet("calculajuros")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<double>> CalculaJurosAsync([FromQuery] decimal valorInicial, [FromQuery] int meses)
+        public async Task<ActionResult<float>> CalculaJurosAsync([FromQuery] decimal valorInicial, [FromQuery] int meses)
         {
-            var taxaJuros = await GetAsync("taxajuros");
-            double valorFinal = (double)valorInicial * (Math.Pow(1 + (double)taxaJuros, (double)meses));
-            var result = (TruncateValue(Decimal.Parse(valorFinal.ToString()))).ToString("0.00");
-            return new JsonResult(result);
+            var interestRate = await GetInterestRateAsync();
+
+            var calculated = (valorInicial * 
+                             (decimal)(Math.Pow(1 + (double)interestRate, (double)meses)));
+
+            var truncated = TruncateValue(calculated);
+
+            return new JsonResult(truncated);
         }
 
-        private async Task<decimal> GetAsync(string action)
+        private async Task<double> GetInterestRateAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{RATES_API_BASE_URL}{action}");
             var client = _httpClient.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{RATES_API_BASE_URL}taxajuros");
 
-            var token = await GetAccessTokenAsync();
-
-            request.Headers.Add("Authorization", $"Bearer {token.accessToken}");
+            var result = await GetAccessTokenAsync();
+            request.Headers.Add("Authorization", $"Bearer {result.accessToken}");
 
             var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
-                var result = await JsonSerializer.DeserializeAsync<decimal>(responseStream);
-                return result;
+                var value = await JsonSerializer.DeserializeAsync<double>(responseStream);
+                return value;
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    return await GetAsync("/auth");
-                };
+                    return await GetInterestRateAsync();
 
                 var reason = response.ReasonPhrase;
                 var code = response.StatusCode;
 
                 throw new Exception(code + "-" + reason);
             }
-
-
         }
 
         private async ValueTask<AuthOutputDTO> GetAccessTokenAsync()
         {
-            var loginInput = new { email = RATES_API_LOGIN, password = RATES_API_PASSWORD };
-            
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{RATES_API_BASE_URL}auth");
-            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(loginInput),
+            var appLoginInput = new { email = RATES_API_LOGIN, password = RATES_API_PASSWORD };
+
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{RATES_API_BASE_URL}{AUTH_ACTION}");
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(appLoginInput),
                                                 System.Text.Encoding.UTF8, "application/json");
 
             var client = _httpClient.CreateClient();
@@ -83,17 +87,17 @@ namespace ConsumerAPI.Calculator
 
                 return result;
             }
-            else
-            {
-                throw new Exception();
-            }
+
+            var reason = response.ReasonPhrase;
+            var code = response.StatusCode;
+
+            throw new Exception(code + "-" + reason);
+
         }
 
-        private decimal TruncateValue(decimal value) 
+        private decimal TruncateValue(decimal value)
         {
             return Math.Truncate(value * 100) / 100;
         }
-        
     }
-
 }
