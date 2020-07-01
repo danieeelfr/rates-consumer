@@ -1,7 +1,5 @@
 # Tech Challenge - API 2 (consumer-api)
 
-Describe the challenge here!
-
 ## Solution overview
 
 ![overview](Resources/Img/api2.png)
@@ -11,38 +9,49 @@ Describe the challenge here!
 ![devops](Resources/Img/devops.png)
 
 ## Quality assurance
-```
-Attach the code coverage animation here
-```
+### Coverage report
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+![devcoverageops](Resources/Img/coverage.png)
 
 ## Running tests
 
+### Unit and/or Integrated tests
 ```
 dotnet test
 ```
+### With coverage
+```
+dotnet test \                    
+  --configuration Development \
+  /p:CollectCoverage=true \
+  /p:CoverletOutputFormat=cobertura \
+  /p:CoverletOutput=./TestResults/Coverage/
+```
 
-
+```
+dotnet tool run reportgenerator \
+  -reports:./TestResults/Coverage/coverage.cobertura.xml \
+  -targetdir:./CodeCoverage \
+  -reporttypes:HtmlInline_AzurePipelines
+```
+## Dockering
+### Build an image
+```
+docker build --pull --rm -f "Dockerfile" -t consumer-services:latest "."
+```
+### Running the image in a container
+```
+docker run --rm -d  -p 5000:5000/tcp -p 5001:5001/tcp consumer-services:latest
+```
+```
+http://localhost:5000/index.html
+```
 ## Deployment
 
 ```
 just commit the changes
 ```
+![devcoverageops](Resources/Img/release.png)
 
 ## Built With
 
@@ -56,8 +65,16 @@ just commit the changes
 * Ubuntu 18.3
 * Visual Studio Code
 
-## Acknowledgments
+## What I've learning?
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Azure - Apps for containers
+* Azure DevOps - Continuous integration (CI)
+* Azure DevOps - Continuous delivery (CD)
+* Azure DevOps - Quality analisys & coverage reports
+* Developing .NET applications using Ubuntu and vscode.
+* Docker - dockering .NET applications
+* Docker - Azure Container Registry
+* GitHub actions (not applied)
+* Integration tests
+* Pact tests (not applied)
+* Unit tests

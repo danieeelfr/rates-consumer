@@ -10,7 +10,7 @@ namespace ConsumerAPI.ShowMe
     {
         [HttpGet("showmethecode")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<string>> ShowMetTheCode()
+        public ActionResult<List<string>> ShowMeTheCode()
         {
             var urls = new[] {
                 "https://github.com/danieeelfr/rates-service",

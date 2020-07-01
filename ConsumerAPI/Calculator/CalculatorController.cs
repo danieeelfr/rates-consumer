@@ -20,7 +20,6 @@ namespace ConsumerAPI.Calculator
 
         private const string AUTH_ACTION = "auth";
 
-
         private readonly IHttpClientFactory _httpClient;
         public CalculatorController(IHttpClientFactory _httpClient)
         {
@@ -44,60 +43,61 @@ namespace ConsumerAPI.Calculator
         private async Task<double> GetInterestRateAsync()
         {
             var client = _httpClient.CreateClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{RATES_API_BASE_URL}taxajuros");
-
-            var result = await GetAccessTokenAsync();
-            request.Headers.Add("Authorization", $"Bearer {result.accessToken}");
-
+            var authResult = await GetAccessTokenAsync();
+            var request = PrepareInterestRateRequest(authResult.accessToken);
+            
             var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
-                var value = await JsonSerializer.DeserializeAsync<double>(responseStream);
-                return value;
+                var interestRate = await JsonSerializer.DeserializeAsync<double>(responseStream);
+                return interestRate;
             }
             else
             {
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     return await GetInterestRateAsync();
 
-                var reason = response.ReasonPhrase;
-                var code = response.StatusCode;
-
-                throw new Exception(code + "-" + reason);
+                throw new Exception(response.StatusCode + "-" + response.ReasonPhrase);
             }
         }
 
         private async ValueTask<AuthOutputDTO> GetAccessTokenAsync()
         {
-            var appLoginInput = new { email = RATES_API_LOGIN, password = RATES_API_PASSWORD };
-
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{RATES_API_BASE_URL}{AUTH_ACTION}");
-            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(appLoginInput),
-                                                System.Text.Encoding.UTF8, "application/json");
-
             var client = _httpClient.CreateClient();
+            var request = PrepareAuthRequest();
             var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
                 using var responseStream = await response.Content.ReadAsStreamAsync();
-                var result = await JsonSerializer.DeserializeAsync<AuthOutputDTO>(responseStream);
-
-                return result;
+                return await JsonSerializer.DeserializeAsync<AuthOutputDTO>(responseStream);
             }
 
-            var reason = response.ReasonPhrase;
-            var code = response.StatusCode;
-
-            throw new Exception(code + "-" + reason);
-
+            throw new Exception(response.StatusCode + "-" + response.ReasonPhrase);
         }
 
         private decimal TruncateValue(decimal value)
         {
             return Math.Truncate(value * 100) / 100;
+        }
+
+        private HttpRequestMessage PrepareInterestRateRequest(string accessToken) 
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{RATES_API_BASE_URL}taxajuros");
+            request.Headers.Add("Authorization", $"Bearer {accessToken}");
+            return request;
+        }
+
+        private HttpRequestMessage PrepareAuthRequest()
+        {
+            var ratesApiAuthData = new { email = RATES_API_LOGIN, password = RATES_API_PASSWORD };
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{RATES_API_BASE_URL}{AUTH_ACTION}");
+            request.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(ratesApiAuthData),
+                                                System.Text.Encoding.UTF8, "application/json");
+
+            return request;
         }
     }
 }
