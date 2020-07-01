@@ -5,15 +5,19 @@
 ![overview](Resources/Img/api2.png)
 
 ## DevOps flow
+
 ![devops](Resources/Img/devops.png)
 
 ### Continuous integration pipeline
+
 ![devops](Resources/Img/ci.gif)
 
 ### Continuous delivery pipeline
+
 ![devops](Resources/Img/delivery.gif)
 
 ## Quality assurance
+
 ### Coverage report
 
 ![devcoverageops](Resources/Img/coverage.png)
@@ -21,10 +25,13 @@
 ## Running tests
 
 ### Unit and/or Integrated tests
+
 ```
 dotnet test
 ```
+
 ### With coverage
+
 ```
 dotnet test \                    
   --configuration Development \
@@ -33,30 +40,34 @@ dotnet test \
   /p:CoverletOutput=./TestResults/Coverage/
 ```
 
+### Coverage report
+
 ```
 dotnet tool run reportgenerator \
   -reports:./TestResults/Coverage/coverage.cobertura.xml \
   -targetdir:./CodeCoverage \
   -reporttypes:HtmlInline_AzurePipelines
 ```
+
 ## Dockering
-### Build an image
+
+### Build an docker image locally
+
 ```
 docker build --pull --rm -f "Dockerfile" -t consumer-services:latest "."
 ```
-### Running the image in a container
+
+### Running the docker image in a locally container
+
 ```
 docker run --rm -d  -p 5000:5000/tcp -p 5001:5001/tcp consumer-services:latest
 ```
+
+## API documentation with Swagger
+
 ```
 http://localhost:5000/index.html
 ```
-## Deployment
-
-```
-just commit the changes
-```
-![devcoverageops](Resources/Img/release.png)
 
 ## Built With
 
@@ -82,4 +93,4 @@ just commit the changes
 * GitHub actions (not applied)
 * Integration tests
 * Pact tests (not applied)
-* Unit tests
+* Unit tests with xUnity

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ConsumerAPI.ShowMe
+namespace ConsumerAPI.Controllers.ShowMe
 {
     [Route("api/v0")]
     [ApiController]

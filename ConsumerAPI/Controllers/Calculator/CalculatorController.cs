@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using ConsumerAPI.DTOs;
 using System.Globalization;
 
-namespace ConsumerAPI.Calculator
+namespace ConsumerAPI.Controllers.Calculator
 {
     [Route("api/v0/")]
     [ApiController]
