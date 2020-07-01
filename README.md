@@ -10,6 +10,9 @@
 ### Continuous integration pipeline
 ![devops](Resources/Img/ci.gif)
 
+### Continuous delivery pipeline
+![devops](Resources/Img/delivery.gif)
+
 ## Quality assurance
 ### Coverage report
 
