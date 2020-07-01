@@ -94,3 +94,4 @@ http://localhost:5000/index.html
 * Integration tests
 * Pact tests (not applied)
 * Unit tests with xUnity
+* Whimsical (draws and diagrams)
