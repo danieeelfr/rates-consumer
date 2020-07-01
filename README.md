@@ -1,6 +1,6 @@
 # Tech Challenge - API 2 (consumer-api)
 
-One Paragraph of project description goes here
+Describe the challenge here!
 
 ## Solution overview
 
