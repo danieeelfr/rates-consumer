@@ -5,8 +5,10 @@
 ![overview](Resources/Img/api2.png)
 
 ## DevOps flow
-
 ![devops](Resources/Img/devops.png)
+
+### Continuous integration pipeline
+![devops](Resources/Img/ci.gif)
 
 ## Quality assurance
 ### Coverage report
