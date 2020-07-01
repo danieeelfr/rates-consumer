@@ -1,20 +1,19 @@
-# Softplan Challenge - API 1 (rate-services-api)
+# Tech Challenge - API 2 (consumer-api)
 
 One Paragraph of project description goes here
 
-## Overview
+## Solution overview
 
-![alt text](Resources/Img/api2.png)
+![overview](Resources/Img/api2.png)
 
-### Prerequisites
+## DevOps flow
 
-What things you need to install the software and how to install them
+![devops](Resources/Img/devops.png)
 
+## Quality assurance
 ```
 Give examples
 ```
-
-### Installing
 
 A step by step series of examples that tell you how to get a development env running
 
@@ -32,20 +31,30 @@ until finished
 
 End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
+## Running tests
 
-Explain how to run the automated tests for this system
+```
+dotnet test
+```
 
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+```
+just commit the changes
+```
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* .NET Core 3.1
+* .NET Tools
+* C#
+* GitHub
+* Jwt
+* Microsoft Azure
+* Swagger
+* Ubuntu 18.3
+* Visual Studio Code
 
 ## Acknowledgments
 
