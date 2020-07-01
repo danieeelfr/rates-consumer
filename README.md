@@ -12,7 +12,7 @@ Describe the challenge here!
 
 ## Quality assurance
 ```
-Give examples
+Attach the code coverage animation here
 ```
 
 A step by step series of examples that tell you how to get a development env running
